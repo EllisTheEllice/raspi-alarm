@@ -1,5 +1,5 @@
-./nbproject/
-./
+nbproject/
+
 dist/alarmsystem.jar
-./build/
+build/
 .netbeans
