@@ -26,7 +26,7 @@ public class AlarmLogger {
     private AlarmLogger(Class c) {
         logger = Logger.getLogger(c.getName());
         logger.setLevel(Props.LOG_LEVEL);
-        logger.setUseParentHandlers(false);
+        logger.setUseParentHandlers(Props.LOG_TO_CONSOLE);
         try {
             SimpleFormatter formatter = new SimpleFormatter();
             StreamHandler handler;

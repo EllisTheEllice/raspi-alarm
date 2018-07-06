@@ -12,6 +12,7 @@ import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
+import github.ellisthealice.alarmsystem.util.AlarmLogger;
 
 /**
  *
@@ -20,10 +21,11 @@ import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 public class MotionDetector {
 
     final GpioController gpio = GpioFactory.getInstance();
-    private static final Pin DEFAULT_PIN = RaspiPin.GPIO_07;
+    private static final Pin DEFAULT_PIN = RaspiPin.GPIO_02;
     private Pin pirPin = null;
     private GpioPinDigitalInput pirInput;
     private MotionDetectionInterface detector;
+    private final AlarmLogger logger = AlarmLogger.getLogger(MotionDetector.class);
 
     public MotionDetector(MotionDetectionInterface parent) {
         this(DEFAULT_PIN, parent);
@@ -42,7 +44,8 @@ public class MotionDetector {
             @Override
             public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
                 //if ("true".equals(System.getProperty("pir.verbose", "false"))) {
-                System.out.println(" >>> GPIO pin state changed: time=" + System.currentTimeMillis() + ", " + event.getPin() + " = " + event.getState());
+                System.out.println("Yeah!");
+                logger.logInfo(" >>> GPIO pin state changed: time=" + System.currentTimeMillis() + ", " + event.getPin() + " = " + event.getState());
                 //}
                 if (event.getState().isHigh()) {
                     detector.motionDetected();

@@ -11,17 +11,21 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import github.ellisthealice.alarmsystem.logic.Alarmsystem;
+import com.amazonaws.services.s3.model.PutObjectResult;
 import github.ellisthealice.alarmsystem.util.AlarmLogger;
 import github.ellisthealice.alarmsystem.util.Props;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  *
@@ -56,12 +60,22 @@ public class ImageUploader {
                 .withRegion(Props.REGION)
                 .build();
 
-        EXECUTOR = Executors.newFixedThreadPool(Props.MAX_THREADS);
+        EXECUTOR = Executors.newFixedThreadPool(Props.MAX_UPLOAD_THREADS);
         uploadThread = new UploadThread();
     }
 
     public Future<String> upload(File f) {
-        return doUpload(f.getName(), f.getName());
+        try {
+            String base64 = DatatypeConverter.printBase64Binary(Files.readAllBytes(f.toPath()));
+            Future<String> result = doUpload(f.getName(), base64);
+            if (Props.CLEANUP) {
+                f.delete();
+            }
+            return result;
+        } catch (IOException ex) {
+            LOGGER.logError(ex.getMessage());
+            return null;
+        }
     }
 
     public Future<String> upload(BufferedImage img, String name) {
@@ -85,15 +99,13 @@ public class ImageUploader {
 
         @Override
         public String call() {
-            //PutObjectResult result = s3.putObject(Props.BUCKETNAME, name, img.toString());
-            //return result.getETag();
-            LOGGER.logInfo("Do something with " + name + " and content " + content);
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ImageUploader.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.logInfo("Do something with " + name);
+            if (Props.DEBUG) {
+                return "testEtag";
+            } else {
+                PutObjectResult result = s3.putObject(Props.BUCKETNAME, name, content);
+                return result.getETag();
             }
-            return "myetag-" + Thread.currentThread();
         }
 
         public void setName(String name) {

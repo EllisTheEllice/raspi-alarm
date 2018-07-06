@@ -24,7 +24,7 @@ public class PiCam extends RPiCamera {
     public PiCam(String saveDir, int height, int width, int brightness, int timeout) throws FailedToRunRaspistillException {
         super(saveDir);
         setWidth(width).setHeight(height).setBrightness(brightness).setExposure(Exposure.AUTO).setTimeout(timeout).turnOffPreview();
-        setQuality(80);
+        setQuality(75);
         this.saveDir = saveDir;
         this.height = height;
         this.width = width;

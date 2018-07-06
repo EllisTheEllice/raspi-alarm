@@ -9,10 +9,15 @@ package github.ellisthealice.alarmsystem.logic;
  *
  * @author EllisTheAlice
  */
+import com.amazonaws.services.sns.model.PublishResult;
 import github.ellisthealice.alarmsystem.util.RegexFileFilter;
 import com.hopding.jrpicam.exceptions.FailedToRunRaspistillException;
 import com.pi4j.io.gpio.GpioController;
 import github.ellisthealice.alarmsystem.aws.s3.ImageUploader;
+import github.ellisthealice.alarmsystem.aws.sns.MessageBroker;
+import github.ellisthealice.alarmsystem.camera.PiCam;
+import github.ellisthealice.alarmsystem.ir.MotionDetectionListener;
+import github.ellisthealice.alarmsystem.ir.MotionDetector;
 import github.ellisthealice.alarmsystem.util.AlarmLogger;
 import github.ellisthealice.alarmsystem.util.Props;
 import java.io.File;
@@ -27,45 +32,15 @@ public class Alarmsystem {
     private GpioController gpio;
     private final static AlarmLogger LOGGER = AlarmLogger.getLogger(Alarmsystem.class);
 
-    public static void main(String[] args) throws FailedToRunRaspistillException, IOException, InterruptedException, ExecutionException {
-        //JvPi jvpi = new Alarmsystem();
-        //MotionDetector detector=new MotionDetector(new MotionDetectionListener());
-        //String path="/home/pi/Pictures";
-        String path = Props.SAVEPATH;
-        LinkedList<Future<String>> futures = new LinkedList<>();
-        //PiCam cam = new PiCam(path, 500, 500, 75, 1);
-        ImageUploader uploader = new ImageUploader();
-        //for (int i = 0; i < 50; i++) {
-        //    System.out.println("Taking " + i);
-        //cam.timelapse(true, "myimg-" + i + "-%04d.jpg", 2000, 200);
+    public static void main(String[] args) throws InterruptedException, FailedToRunRaspistillException {
+        LOGGER.logInfo("Hi");
+        System.out.println("hi");
+        MotionDetector detector = new MotionDetector(new MotionDetectionListener());
+        System.out.println("ho");
 
-        File dir = new File(path);
-        if (!dir.isDirectory()) {
-            throw new IllegalStateException("wtf mate?");
+        while (true) {
+            Thread.sleep(100);
         }
-        //for (File file : dir.listFiles(new RegexFileFilter("myimg-" + i + "*"))) {
-        for (File file : dir.listFiles(new RegexFileFilter("a*"))) {
-            LOGGER.logInfo("uploading...");
-            Future<String> f = uploader.upload(file);
-            futures.add(f);
-        }
-
-        for (Future<String> future : futures) {
-            LOGGER.logInfo(future.get());
-        }
-        uploader.stop();
-
-        // }
-        // cam.stop();
-        //cam.takeVideo("myvideo.h264", 10);
-        /*while (true) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }*/
     }
 
 }
