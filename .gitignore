@@ -1,5 +1,5 @@
 nbproject/
 
-dist/alarmsystem.jar
+target/
 build/
 .netbeans
