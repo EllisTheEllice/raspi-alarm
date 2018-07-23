@@ -11,6 +11,7 @@ import github.ellisthealice.alarmsystem.aws.sns.MessageBroker;
 import github.ellisthealice.alarmsystem.aws.AWSClientFactory;
 import github.ellisthealice.alarmsystem.camera.PiCam;
 import github.ellisthealice.alarmsystem.logic.AsyncUploadworker;
+import github.ellisthealice.alarmsystem.radio.Sender;
 import github.ellisthealice.alarmsystem.util.Props;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,12 +44,14 @@ public class MotionDetectionListener implements MotionDetectionInterface {
     @Override
     public void motionDetected() {
         try {
-            executor = Executors.newScheduledThreadPool(Props.MAX_UPLOAD_THREADS);
             broker.sendIntruderWarning();
+            Sender.switchOnAll();
+            executor = Executors.newScheduledThreadPool(Props.MAX_UPLOAD_THREADS);
             executor.scheduleAtFixedRate(worker, Props.CAMERA_IMG_INTERVAL + 30, 500, TimeUnit.MILLISECONDS);
             cam.timelapse(true, IMG_PATTERN, Props.CAMERA_RECORDING_LENGTH, Props.CAMERA_IMG_INTERVAL);
             Thread.sleep(5000); //give some time to process the remaining images
             executor.shutdown();
+            Sender.switchOffAll();
         } catch (IOException | InterruptedException ex) {
             Logger.getLogger(MotionDetectionListener.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -1,5 +1,7 @@
-nbproject/
+alarmsystem/nbproject/
 
-target/
-build/
-.netbeans
+alarmsystem/target/
+alarmsystem/build/
+alarmsystem/.netbeans
+
+raspilot/nbproject/

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Raspilot</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="css/titatoggle.min.css" rel="stylesheet" type="text/css"/>
+        <link href="css/custom.css" rel="stylesheet" type="text/css"/>
+        <script src="js/jquery-3.1.1.min.js" type="text/javascript"></script>
+        <script src="js/bootstrap.bundle.min.js" type="text/javascript"></script>
+
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="text-primary">Raspilot</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="settings-group">
+                        <span>Alarmsystem settings</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4 col-lg-3">
+                    <div class="loader" id="loader"></div>
+                    <div class="form-check checkbox-slider--b" id="slider">
+                        <label>
+                            <input type="checkbox" id="chk_status_change"><span>&nbsp;</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-8 col-lg-4">enable the alarm system</div>
+                <div class="col-12 col-lg-5">
+                    <div class="alert alert-success" id="alarm-alert-success" role="alert">
+                        <strong>Success!</strong>
+                        <span id="successmessage"></span>
+                    </div>
+                    <div class="alert alert-danger" id="alarm-alert-error" role="alert">
+                        <strong>Ooops!</strong>
+                        <span id="errormessage"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="settings-group">
+                        <span>Other settings</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4 col-lg-3">
+                    <div class="form-check checkbox-slider--b" id="slider">
+                        <label>
+                            <input type="checkbox"><span>&nbsp;</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-8 col-lg-4">something else</div>
+                <div class="col-12 col-lg-5">
+                    <div class="alert alert-success" role="alert">
+                        <strong>Success!</strong>
+                        <span></span>
+                    </div>
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Ooops!</strong>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            $(function () {
+                $('.alert').hide();
+                $('#slider').hide();
+
+                var statuscheck = function () {
+                    $.get('status.php', function (data) {
+                        if (data == 'running') {
+                            $('#chk_status_change').prop('checked', true);
+                        } else {
+                            $('#chk_status_change').prop('checked', false);
+                        }
+                        $('#loader').hide();
+                        $('#slider').show();
+                    });
+                };
+                
+                statuscheck();
+                setInterval(statuscheck, 5000);
+
+
+
+
+                $('#chk_status_change').change('change', function (e) {
+                    var me = this;
+                    $('.alert').hide();
+                    $.ajax({
+                        type: "POST",
+                        url: "setstate.php",
+                        data: {enabled: me.checked},
+                        success: function (data) {
+                            $('#alarm-alert-success').fadeIn();
+                            $('#successmessage').text(data);
+                            console.log("success: " + data);
+                            $('#alarm-alert-success').delay(1500).fadeOut();
+                        },
+                        error: function (data) {
+                            $('#alarm-alert-error').fadeIn();
+                            $('#errormessage').text("Something went wrong");
+                            console.log("an error occured: " + data);
+                            $('#alarm-alert-error').delay(1500).fadeOut();
+                        }
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>
