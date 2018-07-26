@@ -92,23 +92,23 @@ Once you have an account, log in and do the following.
 ### SNS
 1. Move to the SNS service section
 
-![alt text](https://github.com/ellistheellice/alarmsystem/blob/master/doc/images/aws/sns/1.png)
+![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/sns/1.png)
 
 2. Click on "Create topic"
 
-![alt text](https://github.com/ellistheellice/alarmsystem/blob/master/doc/images/aws/sns/2.PNG)
+![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/sns/2.PNG)
 
 3. Specify a Topic name and a Display name and click on "Create topic"
 
-![alt text](https://github.com/ellistheellice/alarmsystem/blob/master/doc/images/aws/sns/3.PNG)
+![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/sns/3.PNG)
 
 4. Now, click on "Create subscription"
 
-![alt text](https://github.com/ellistheellice/alarmsystem/blob/master/doc/images/aws/sns/4.png)
+![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/sns/4.png)
 
 5. Specify the way you want to get informed. In this case, I wanted to get informed by SMS, but email is also possible. 
 
-![alt text](https://github.com/ellistheellice/alarmsystem/blob/master/doc/images/aws/sns/5.png)
+![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/sns/5.png)
 
 Once done, you will receive a message to confirm the subscription. After you have confirmed it, you´re good to go.
 
@@ -116,7 +116,7 @@ Once done, you will receive a message to confirm the subscription. After you hav
 
 1. Move to the S3 service and click on "Create bucket" to create a bucket. Give it a name and save it.
 
-![alt text](https://github.com/ellistheellice/alarmsystem/blob/master/doc/images/aws/s3/1.png)
+![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/s3/1.PNG)
 
 2. Make sure you note down the region and the bucketname as they will be required later
 
@@ -126,29 +126,29 @@ Now that we have our services in place, we need to create a user with access per
 
 1. Switch to the IAM service, click on "Users" and click "Add user".
 
-![alt text](https://github.com/ellistheellice/alarmsystem/blob/master/doc/images/aws/iam/2.PNG)
+![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/iam/2.PNG)
 
 2. Specify a username, check the "Programmatic access" checkbox and click "Next: Permissions".
 
-![alt text](https://github.com/ellistheellice/alarmsystem/blob/master/doc/images/aws/iam/3.PNG)
+![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/iam/3.PNG)
 
 
 3. Click on "Attach existing policies directly", search for "Amazons3FullAccess" and check it. 
 
-![alt text](https://github.com/ellistheellice/alarmsystem/blob/master/doc/images/aws/iam/4.PNG)
+![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/iam/4.PNG)
 
 
 4. Now search for "SNSFullAccess" and check it. Click "Next: Preview"
 
-![alt text](https://github.com/ellistheellice/alarmsystem/blob/master/doc/images/aws/iam/5.PNG)
+![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/iam/5.PNG)
 
 5. Click on "Create user".
 
-![alt text](https://github.com/ellistheellice/alarmsystem/blob/master/doc/images/aws/iam/6.PNG)
+![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/iam/6.PNG)
 
 6. Note down your Access key ID and your Secret access key
 
-![alt text](https://github.com/ellistheellice/alarmsystem/blob/master/doc/images/aws/iam/7.PNG)
+![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/iam/7.PNG)
 
 
 ## Setting up the app
