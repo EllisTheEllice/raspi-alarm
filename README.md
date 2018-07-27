@@ -1,20 +1,20 @@
 # raspi-alarm
 
 This is a small home-made alarmsystem based on a raspberry pi. The alarmsystem is 
-able to detect motion through a IR-sensor. If a motion is detected, the raspberry 
+able to detect motion through a PIR-sensor. If a motion is detected, the raspberry 
 starts taking images from the suspicious movements. Those images are then immediately 
 backed-up to AWS [S3](https://aws.amazon.com/de/s3/), so that in case the raspberry 
 gets destroyed, some images have made it to the backup. In addition to this, the 
-raspberry send a notification to an AWS [SNS](https://aws.amazon.com/sns/?nc1=h_ls) 
+raspberry sends a notification to an AWS [SNS](https://aws.amazon.com/sns/?nc1=h_ls) 
 topic, so that the owner can get notified in multiple ways (email, SMS, Push etc.).
 
 If you have the possibility to run a web application, here are some good news:
-I have included a simple webapp which can run on a webserver and viewed by a 
+I have included a simple webapp which can run on a webserver and viewed on a 
 smartphone. With this webapp, it is possible to start or stop the alarmsystem 
 without the need to SSH into your raspberry.
 Of course it is possible to run this webapp on the raspberry itself. The installation section covers how to do that.
 
-**Using AWS services imply costs. They are really low, but they will apply. See here for costs of the used services**
+**Using AWS services implies costs. They are really low, but they will arise. See here for pricing of the used services**
 - [AWS SNS pricing](https://aws.amazon.com/sns/pricing/)
 - [AWS S3 pricing](https://aws.amazon.com/sns/pricing/)
 
@@ -30,8 +30,8 @@ Tested on
 
 1. [Used Tech](#technology)
 2. [Setting up the raspberry camera](#camera)
-3. [Setting up the raspberry radio module](#radio)
-4. [Setting up the raspberry](#raspberry)
+3. [Setting up the raspberry](#raspberry)
+4. [Setting up the raspberry radio module](#radio)
 5. [Setting up the AWS](#aws)
 6. [Setting up Netbeans for development](#netbeans)
 
@@ -56,9 +56,6 @@ First of all, you have to connect the camera to the raspberry pi. The following 
 - [Install raspi camera with GUI](https://projects.raspberrypi.org/en/projects/getting-started-with-picamera/4)
 - [Install raspi camera without GUI](https://www.raspberrypi.org/documentation/configuration/camera.md)
 
-## Setting up the raspberry radio module<a name="radio"></a>
-To switch on lights in an event of suspicious movement, we need radio-controllable plugs and radio sender for raspberry pi. [This page](https://www.instructables.com/id/Super-Simple-Raspberry-Pi-433MHz-Home-Automation/) explains how to set it up on the raspberry (Step 4).
-
 ## Setting up the raspberry<a name="raspberry"></a>
 
 - Wifi connection
@@ -67,22 +64,17 @@ To switch on lights in an event of suspicious movement, we need radio-controllab
 ```sh
 $ sudo apt-get install git-core 
 $ git clone git://git.drogon.net/wiringPi
-$ cd WiringPi
+$ cd wiringPi
 $ ./build
 ```
 - pilight
 
 aws credentials file
 
-Some time ago, Oracle announced a JDK which runs on ARM processors, which enables
-the raspberry to run java programs. Together with the [Pi4J](http://pi4j.com/) 
-library, it is possible to directly access GPIO connected devices. To install java, 
-simply execute the following steps:
 
-```sh
-$ sudo apt-get update 
-$ sudo apt-get install oracle-java8-jdk
-```
+
+## Setting up the raspberry radio module<a name="radio"></a>
+To switch on lights in an event of suspicious movement, we need radio-controllable plugs and radio sender for raspberry pi. [This page](https://www.instructables.com/id/Super-Simple-Raspberry-Pi-433MHz-Home-Automation/) explains how to set it up on the raspberry (Step 4).
 
 ## Setting up AWS<a name="aws"></a>
 Before coming to the required AWS services, you need to have an AWS account. See [here](https://aws.amazon.com/what-is-aws/) for more information on what AWS is and how to create an account.
@@ -92,23 +84,23 @@ Once you have an account, log in and do the following.
 ### SNS
 1. Move to the SNS service section
 
-![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/sns/1.png)
+<img src="https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/sns/1.png" width="450px"/>
 
 2. Click on "Create topic"
 
-![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/sns/2.PNG)
+<img src="https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/sns/2.PNG" width="450px"/>
 
 3. Specify a Topic name and a Display name and click on "Create topic"
 
-![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/sns/3.PNG)
+<img src="https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/sns/3.PNG" width="450px"/>
 
 4. Now, click on "Create subscription"
 
-![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/sns/4.png)
+<img src="https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/sns/4.png" width="450px"/>
 
 5. Specify the way you want to get informed. In this case, I wanted to get informed by SMS, but email is also possible. 
 
-![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/sns/5.png)
+<img src="https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/sns/5.png" width="450px"/>
 
 Once done, you will receive a message to confirm the subscription. After you have confirmed it, you´re good to go.
 
@@ -116,7 +108,7 @@ Once done, you will receive a message to confirm the subscription. After you hav
 
 1. Move to the S3 service and click on "Create bucket" to create a bucket. Give it a name and save it.
 
-![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/s3/1.PNG)
+<img src="https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/s3/1.PNG" width="450px"/>
 
 2. Make sure you note down the region and the bucketname as they will be required later
 
@@ -126,32 +118,56 @@ Now that we have our services in place, we need to create a user with access per
 
 1. Switch to the IAM service, click on "Users" and click "Add user".
 
-![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/iam/2.PNG)
+<img src="https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/iam/2.PNG" width="450px"/>
 
 2. Specify a username, check the "Programmatic access" checkbox and click "Next: Permissions".
 
-![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/iam/3.PNG)
+<img src="https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/iam/3.PNG" width="450px"/>
 
 
 3. Click on "Attach existing policies directly", search for "Amazons3FullAccess" and check it. 
 
-![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/iam/4.PNG)
+<img src="https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/iam/4.PNG" width="450px"/>
 
 
 4. Now search for "SNSFullAccess" and check it. Click "Next: Preview"
 
-![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/iam/5.PNG)
+<img src="https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/iam/5.PNG" width="450px"/>
 
 5. Click on "Create user".
 
-![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/iam/6.PNG)
+<img src="https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/iam/6.PNG" width="450px"/>
 
 6. Note down your Access key ID and your Secret access key
 
-![alt text](https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/iam/7.PNG)
+<img src="https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/iam/7.PNG" width="450px"/>
 
 
 ## Setting up the app
+
+**Install the alarmsystem**
+
+Before you will be able to execute the alarmsystem project, you have to compile it. Execute the following steps to do so:
+
+```sh
+$ sudo apt-get update 
+$ apt-get install git
+$ git clone https://github.com/EllisTheEllice/raspi-alarm
+$ 
+```
+
+Some time ago, Oracle announced a JDK which runs on ARM processors,which enables the raspberry to run java programs. Together with the [Pi4J](http://pi4j.com/) 
+library, it is possible to directly access GPIO connected devices. To install java, simply execute the following steps:
+
+```sh
+$ sudo apt-get install oracle-java8-jdk
+```
+
+create service
+
+
+**Install the webapp**
+
 SSH into your raspberry pi and execute the following commands to install apache 
 along with PHP:
 
@@ -172,10 +188,24 @@ $ sudo apt-get update
 $ sudo apt-get install -t stretch apache2 -y
 $ sudo apt-get install -t stretch php7.0 php7.0-curl php7.0-fpm php7.0-cli php7.0-opcache php7.0-json -y
 $ sudo apt-get install -t stretch libapache2-mod-php7.0 -y
+
+#Make the pi user part of the www-data group
+$ sudo usermod -a -G www-data pi
 ```
-Now that apache and PHP are installed, you can bring the webapp to it. Copy the contents of the XXX folder to your /var/www/html folder. You should now be able to visit the webapp using http://{raspi-ip}/raspilot
+
+Now that apache and PHP are installed, you can bring the webapp to it. Copy the contents of the raspilot folder to your /var/www/html folder.
+
+```sh
+$ sudo cp raspilot /var/www/html/
+$ sudo chown -R www-data:www-data /var/www/html/rapilot
+```
+ You should now be able to visit the webapp using http://{raspi-ip}/raspilot
+
+<img src="https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/raspilot/1.PNG" width="450px"/>
+
 
 ## Setting up Netbeans for development<a name="netbeans"></a>
 
+If you want to make changes to the project, it is also possible to set it up in a way, that made changes will be automatically transferred to the pi and exectuted remotely. This requires NetBeans as the ide. Have a look [here](https://lb.raspberrypi.org/forums/viewtopic.php?t=120072) to see how to do that.
 
-https://lb.raspberrypi.org/forums/viewtopic.php?t=120072
+
