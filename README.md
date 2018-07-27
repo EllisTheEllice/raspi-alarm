@@ -14,7 +14,7 @@ smartphone. With this webapp, it is possible to start or stop the alarmsystem
 without the need to SSH into your raspberry.
 Of course it is possible to run this webapp on the raspberry itself. The installation section covers how to do that.
 
-**Using AWS services implies costs. They are really low, but they will arise. See here for pricing of the used services**
+**Using AWS services implies costs. They are really low, but they will occur. See here for pricing of the used services:**
 - [AWS SNS pricing](https://aws.amazon.com/sns/pricing/)
 - [AWS S3 pricing](https://aws.amazon.com/sns/pricing/)
 
@@ -23,7 +23,7 @@ Of course it is possible to run this webapp on the raspberry itself. The install
 
 ## Raspberry version
 Tested on
-- Model B Rev2
+- Model B Rev.2
 
 # Table of contents
 
@@ -33,7 +33,8 @@ Tested on
 3. [Setting up the raspberry](#raspberry)
 4. [Setting up the raspberry radio module](#radio)
 5. [Setting up the AWS](#aws)
-6. [Setting up Netbeans for development](#netbeans)
+6. [Setting up the AWS](#app)
+7. [Setting up Netbeans for development](#netbeans)
 
 
 # Used Tech<a name="technology"></a>
@@ -69,8 +70,6 @@ $ ./build
 ```
 - pilight
 
-aws credentials file
-
 
 
 ## Setting up the raspberry radio module<a name="radio"></a>
@@ -104,6 +103,8 @@ Once you have an account, log in and do the following.
 
 Once done, you will receive a message to confirm the subscription. After you have confirmed it, you´re good to go.
 
+---
+
 ### S3
 
 1. Move to the S3 service and click on "Create bucket" to create a bucket. Give it a name and save it.
@@ -111,6 +112,8 @@ Once done, you will receive a message to confirm the subscription. After you hav
 <img src="https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/s3/1.PNG" width="450px"/>
 
 2. Make sure you note down the region and the bucketname as they will be required later
+
+---
 
 ### IAM
 
@@ -142,19 +145,26 @@ Now that we have our services in place, we need to create a user with access per
 
 <img src="https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/aws/iam/7.PNG" width="450px"/>
 
+---
 
-## Setting up the app
-
-**Install the alarmsystem**
-
-Before you will be able to execute the alarmsystem project, you have to compile it. Execute the following steps to do so:
+Now that you have the access key id and the secret access key, you have to place your credentials on the raspberry. Create a credentials file in the pi users home dir:
 
 ```sh
-$ sudo apt-get update 
-$ apt-get install git
-$ git clone https://github.com/EllisTheEllice/raspi-alarm
-$ 
+$ mkdir /home/pi/.aws
+$ nano /home/pi/.aws/credentials
 ```
+
+The files conten should looks as follows:
+
+```
+[default]
+aws_access_key_id=<your-key-here>
+aws_secret_access_key=<your secret here>
+```
+
+## Setting up the app<a name="app"></a>
+
+**Install the alarmsystem**
 
 Some time ago, Oracle announced a JDK which runs on ARM processors,which enables the raspberry to run java programs. Together with the [Pi4J](http://pi4j.com/) 
 library, it is possible to directly access GPIO connected devices. To install java, simply execute the following steps:
@@ -163,8 +173,39 @@ library, it is possible to directly access GPIO connected devices. To install ja
 $ sudo apt-get install oracle-java8-jdk
 ```
 
-create service
+Before you will be able to execute the alarmsystem project, you have to compile it. Execute the following steps to do so:
 
+```sh
+$ sudo apt-get update 
+$ apt-get install git
+$ git clone https://github.com/EllisTheEllice/raspi-alarm
+$ cd raspi-alarm
+$ wget http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz
+$ tar -xzf apache-maven-3.5.4-bin.tar.gz
+$ export PATH=$PATH:/home/pi/raspi-alarm/apache-maven-3.5.4/bin
+$ cd alarmsystem
+```
+Before you compile, you should have a look at the src/main/java/github/ellisthealice/alarmsystem/util/Props.java file so that it fits to your environment.
+After that, you can compile:
+
+```sh
+ $ mvn clean install
+```
+
+Now, let´s create a service. This will be needed to autostart the alarmsystem after errors as well as for the webapp.
+
+```sh
+$ cd ../
+$ sudo cp linux/alarmsystem.service /etc/systemd/system/
+$ sudo systemctl deamon-reload
+$ sudo systemctl enable alarmsystem.service
+#Now you should be able to start the service
+$ sudo systemctl start alarmsystem.service
+# You can check the status
+$ sudo systemctl status alarmsystem.service
+# You can also check the logs
+$ ls /var/log/alarmsystem
+```
 
 **Install the webapp**
 
@@ -191,7 +232,16 @@ $ sudo apt-get install -t stretch libapache2-mod-php7.0 -y
 
 #Make the pi user part of the www-data group
 $ sudo usermod -a -G www-data pi
+
+#To allow the www-data user to start/stop the service created above, do the following
+$ sudo visudo
+# Add these lines:
+# www-data ALL=(ALL:ALL) NOPASSWD: /bin/systemctl start alarmsystem
+# www-data ALL=(ALL:ALL) NOPASSWD: /bin/systemctl stop alarmsystem
 ```
+**Caution**: Editing the sudoers file can harm the system. Please make sure you are aware of possible problems!
+
+
 
 Now that apache and PHP are installed, you can bring the webapp to it. Copy the contents of the raspilot folder to your /var/www/html folder.
 
@@ -201,11 +251,9 @@ $ sudo chown -R www-data:www-data /var/www/html/rapilot
 ```
  You should now be able to visit the webapp using http://{raspi-ip}/raspilot
 
-<img src="https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/raspilot/1.PNG" width="450px"/>
+<img src="https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/raspilot/1.PNG" width="350px"/>
 
 
 ## Setting up Netbeans for development<a name="netbeans"></a>
 
 If you want to make changes to the project, it is also possible to set it up in a way, that made changes will be automatically transferred to the pi and exectuted remotely. This requires NetBeans as the ide. Have a look [here](https://lb.raspberrypi.org/forums/viewtopic.php?t=120072) to see how to do that.
-
-

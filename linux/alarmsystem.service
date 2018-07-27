@@ -1,0 +1,10 @@
+[Unit]
+Description=Unit to start the alarm system
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/java -jar /home/pi/alarmsystem-1.0-SNAPSHOT-jar-with-dependencies.jar
+Restart=on-failure
