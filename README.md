@@ -31,9 +31,9 @@ Tested on
 1. [Used Tech](#technology)
 2. [Setting up the raspberry camera](#camera)
 3. [Setting up the raspberry](#raspberry)
-4. [Setting up the raspberry radio module](#radio)
-5. [Setting up the AWS](#aws)
-6. [Setting up the AWS](#app)
+4. [Setting up the raspberry 433Mhz module](#radio)
+5. [Setting up AWS](#aws)
+6. [Setting up the app](#app)
 7. [Setting up Netbeans for development](#netbeans)
 
 
@@ -72,7 +72,7 @@ $ ./build
 
 
 
-## Setting up the raspberry radio module<a name="radio"></a>
+## Setting up the raspberry 433Mhz module<a name="radio"></a>
 To switch on lights in an event of suspicious movement, we need radio-controllable plugs and radio sender for raspberry pi. [This page](https://www.instructables.com/id/Super-Simple-Raspberry-Pi-433MHz-Home-Automation/) explains how to set it up on the raspberry (Step 4).
 
 ## Setting up AWS<a name="aws"></a>
@@ -183,6 +183,7 @@ $ cd raspi-alarm
 $ wget http://ftp-stud.hs-esslingen.de/pub/Mirrors/ftp.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz
 $ tar -xzf apache-maven-3.5.4-bin.tar.gz
 $ export PATH=$PATH:/home/pi/raspi-alarm/apache-maven-3.5.4/bin
+$ export JAVA_HOME=/usr/lib/jvm/jdk-8-oracle-arm32-vfp-hflt
 $ cd alarmsystem
 ```
 Before you compile, you should have a look at the src/main/java/github/ellisthealice/alarmsystem/util/Props.java file so that it fits to your environment.
@@ -235,10 +236,13 @@ $ sudo usermod -a -G www-data pi
 
 #To allow the www-data user to start/stop the service created above, do the following
 $ sudo visudo
-# Add these lines:
-# www-data ALL=(ALL:ALL) NOPASSWD: /bin/systemctl start alarmsystem
-# www-data ALL=(ALL:ALL) NOPASSWD: /bin/systemctl stop alarmsystem
 ```
+Add these lines:
+```
+www-data ALL=(ALL:ALL) NOPASSWD: /bin/systemctl start alarmsystem
+www-data ALL=(ALL:ALL) NOPASSWD: /bin/systemctl stop alarmsystem
+```
+
 **Caution**: Editing the sudoers file can harm the system. Please make sure you are aware of possible problems!
 
 

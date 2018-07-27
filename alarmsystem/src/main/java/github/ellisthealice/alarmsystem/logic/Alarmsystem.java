@@ -9,7 +9,6 @@ package github.ellisthealice.alarmsystem.logic;
  *
  * @author EllisTheAlice
  */
-import com.amazonaws.kinesisvideo.common.exception.KinesisVideoException;
 import com.hopding.jrpicam.exceptions.FailedToRunRaspistillException;
 import github.ellisthealice.alarmsystem.ir.MotionDetectionListener;
 import github.ellisthealice.alarmsystem.ir.MotionDetector;
@@ -20,7 +19,7 @@ public class Alarmsystem {
     private final static AlarmLogger LOGGER = AlarmLogger.getLogger(Alarmsystem.class);
     private static MotionDetector detector;
 
-    public static void main(String[] args) throws InterruptedException, FailedToRunRaspistillException, KinesisVideoException {
+    public static void main(String[] args) throws InterruptedException, FailedToRunRaspistillException {
         LOGGER.logInfo("Starting alarmsystem...");
         detector = new MotionDetector(new MotionDetectionListener());
         detector.startDetection();
