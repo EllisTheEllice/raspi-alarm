@@ -1,0 +1,62 @@
+Raspberry
+- dhcpcd anpassen
+- cronjob
+- modprobe treiber options hinzufügen
+- apt-get update
+- apt-get upgrade
+
+
+
+cron: * * * * * ping -c5 www.google.com || ifup --force wlan0
+
+
+MAC Adresse Dash Button: 44-65-0D-43-65-30
+
+
+AWS cli installieren und konfigurieren
+
+https://github.com/awslabs/amazon-kinesis-video-streams-producer-sdk-cpp
+
+https://docs.aws.amazon.com/kinesisvideostreams/latest/dg/producersdk-cpp-rpi.html
+	- Prerequisites and installation
+	$  sudo apt-get update
+	$  sudo apt-get install git
+	$  sudo apt-get install byacc flex
+	$  sudo apt-get install openjdk-8-jdk
+	$  sudo apt-get install cmake
+	$  wget https://www.amazontrust.com/repository/SFSRootCAG2.pem
+	$  cp SFSRootCAG2.pem /etc/ssl/cert.pem
+	$  git clone https://github.com/awslabs/amazon-kinesis-video-streams-producer-sdk-cpp
+	$  cd amazon-kinesis-video-stream-producer-sdk-cpp/kinesis-video-native-build
+	$  chmod +x install-script
+	$  ./install-script
+	
+	
+Funk
+	sudo nano /etc/apt/sources.list
+		deb http://apt.pilight.org/ stable main
+	sudo -s
+	wget -O - http://apt.pilight.org/pilight.key | apt-key add -
+	apt-get install libunwind-dev libunwind8 libpcap-dev libpcap0.8
+	apt-get update
+	apt-get install pilight	
+	service pilight start
+https://moaltiplexx.wordpress.com/2015/07/05/funksteckdosen-mumbi-m-fs300-mit-fhem-und-pilight-schalten/
+https://www.reichelt.de/reicheltpedia/index.php/Anleitungen_f%C3%BCr_den_Raspberry_Pi#Funksteckdosen_schalten_mit_pilight_und_Temperatur_anzeigen
+
+
+
+
+DynamoDB
+arn:aws:dynamodb:eu-west-1:575860075599:table/temperature
+
+pip --version
+pip install awscli --upgrade --user
+.bashrc
+	Add to PATH: ~/.local/bin
+
+
+
+
+
+Sudoers to start/stop service
