@@ -19,7 +19,7 @@ Of course it is possible to run this webapp on the raspberry itself. The install
 - [AWS S3 pricing](https://aws.amazon.com/sns/pricing/)
 
 ## Version
-0.1
+0.0.1
 
 ## Raspberry version
 Tested on
@@ -256,8 +256,3 @@ $ sudo chown -R www-data:www-data /var/www/html/rapilot
  You should now be able to visit the webapp using http://{raspi-ip}/raspilot
 
 <img src="https://raw.githubusercontent.com/EllisTheEllice/raspi-alarm/master/doc/images/raspilot/1.PNG" width="350px"/>
-
-
-## Setting up Netbeans for development<a name="netbeans"></a>
-
-If you want to make changes to the project, it is also possible to set it up in a way, that made changes will be automatically transferred to the pi and exectuted remotely. This requires NetBeans as the ide. Have a look [here](https://lb.raspberrypi.org/forums/viewtopic.php?t=120072) to see how to do that.
